@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>随机内容生成器</title>
+    <title>ES大富翁随机生成器</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -35,13 +35,13 @@
         
         header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
         
         h1 {
             color: #2c3e50;
-            font-size: 2.8rem;
-            margin-bottom: 15px;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
             background: linear-gradient(45deg, #1a2a6c, #b21f1f);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -49,23 +49,47 @@
         
         .description {
             color: #7f8c8d;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             max-width: 800px;
             margin: 0 auto;
-            line-height: 1.6;
+            line-height: 1.5;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .card-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #eaeaea;
+            padding-bottom: 10px;
         }
         
         .controls {
             display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 30px 0;
+            gap: 15px;
+            margin-bottom: 15px;
             flex-wrap: wrap;
         }
         
         .btn {
-            padding: 15px 30px;
-            font-size: 1.1rem;
+            padding: 12px 20px;
+            font-size: 1rem;
             border: none;
             border-radius: 50px;
             cursor: pointer;
@@ -74,21 +98,24 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+            min-width: 140px;
         }
         
-        .btn-text {
-            background: linear-gradient(45deg, #6a11cb, #2575fc);
+        .btn-destiny {
+            background: linear-gradient(45deg, #8e44ad, #9b59b6);
             color: white;
         }
         
-        .btn-image {
-            background: linear-gradient(45deg, #00cdac, #02aab0);
+        .btn-opportunity {
+            background: linear-gradient(45deg, #3498db, #2980b9);
             color: white;
         }
         
         .btn-price {
-            background: linear-gradient(45deg, #ff7e5f, #feb47b);
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
             color: white;
         }
         
@@ -101,43 +128,13 @@
             transform: translateY(1px);
         }
         
-        .result-section {
-            margin: 40px 0;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
-        }
-        
-        .card {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .card-title {
-            font-size: 1.5rem;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 2px solid #eaeaea;
-            padding-bottom: 10px;
-        }
-        
         .text-display {
-            min-height: 120px;
+            min-height: 180px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            font-size: 1.8rem;
+            font-size: 1.2rem;
             color: #2c3e50;
             line-height: 1.5;
             transition: opacity 0.5s ease;
@@ -145,15 +142,16 @@
             background: white;
             border-radius: 10px;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #1a2a6c;
         }
         
         .price-display {
-            min-height: 120px;
+            min-height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            font-size: 3.5rem;
+            font-size: 2.5rem;
             font-weight: bold;
             color: #b21f1f;
             transition: all 0.5s ease;
@@ -162,47 +160,114 @@
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
             position: relative;
             overflow: hidden;
+            margin-top: 15px;
         }
         
         .price-display::before {
             content: "¥";
-            font-size: 2rem;
+            font-size: 1.5rem;
             margin-right: 10px;
             color: #fdbb2d;
         }
         
+        .images-section {
+            grid-column: span 2;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            margin-top: 10px;
+        }
+        
+        .images-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .btn-image {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
         .images-display {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
         }
         
-        .image-card {
+        .image-item {
             background: white;
-            border-radius: 15px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
         }
         
-        .image-card:hover {
+        .image-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
         
-        .image-card img {
+        .image-item img {
             width: 100%;
-            height: 180px;
+            height: 100%;
             object-fit: cover;
             display: block;
         }
         
         .image-info {
-            padding: 15px;
+            padding: 10px;
             text-align: center;
             font-weight: 500;
             color: #34495e;
+            font-size: 0.9rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
         }
         
         .fade-in {
@@ -226,55 +291,44 @@
         
         footer {
             text-align: center;
-            margin-top: 40px;
+            margin-top: 20px;
             color: rgba(255, 255, 255, 0.8);
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
         
         @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .images-section {
+                grid-column: span 1;
+            }
+            
+            .images-display {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
             h1 {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
             
             .description {
                 font-size: 1rem;
-            }
-            
-            .btn {
-                padding: 12px 25px;
-                font-size: 1rem;
-            }
-            
-            .text-content {
-                font-size: 1.4rem;
-            }
-            
-            .price-display {
-                font-size: 2.8rem;
-            }
-            
-            .images-display {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                gap: 15px;
             }
         }
         
         @media (max-width: 480px) {
             .controls {
                 flex-direction: column;
-                align-items: center;
             }
             
             .btn {
-                width: 80%;
+                width: 100%;
             }
             
             .images-display {
                 grid-template-columns: 1fr;
-            }
-            
-            .price-display {
-                font-size: 2.2rem;
             }
         }
     </style>
@@ -282,113 +336,186 @@
 <body>
     <div class="container">
         <header>
-            <h1>随机内容生成器</h1>
-            <p class="description">点击下方按钮随机生成文字、图片或价格。每次点击"开始随机图片"按钮将显示5张不同的图片。</p>
+            <h1>ES大富翁随机生成器</h1>
+            <p class="description">抽取命运卡、机会卡，展示小卡并生成随机价格</p>
         </header>
         
-        <div class="controls">
-            <button class="btn btn-text" id="randomTextBtn">
-                <i class="fas fa-quote-left"></i> 开始随机文字
-            </button>
-            <button class="btn btn-image" id="randomImageBtn">
-                <i class="fas fa-image"></i> 开始随机图片
-            </button>
-            <button class="btn btn-price" id="randomPriceBtn">
-                <i class="fas fa-dollar-sign"></i> 开始随机价格
-            </button>
-        </div>
-        
-        <div class="result-section">
-            <div class="card">
+        <div class="main-content">
+            <div class="card-section">
                 <div class="card-title">
-                    <i class="fas fa-font"></i> 随机文字展示
+                    <i class="fas fa-dragon"></i> 命运与机会卡
                 </div>
-                <div class="text-display" id="textDisplay">
-                    点击上方按钮开始随机显示文字
+                <div class="controls">
+                    <button class="btn btn-destiny" id="destinyCardBtn">
+                        <i class="fas fa-dragon"></i> 随机命运卡
+                    </button>
+                    <button class="btn btn-opportunity" id="opportunityCardBtn">
+                        <i class="fas fa-clover"></i> 随机机会卡
+                    </button>
+                </div>
+                <div class="text-display" id="cardDisplay">
+                    点击上方按钮抽取命运卡或机会卡
                 </div>
             </div>
             
-            <div class="card">
+            <div class="card-section">
                 <div class="card-title">
-                    <i class="fas fa-images"></i> 随机图片展示
+                    <i class="fas fa-coins"></i> 随机价格生成
+                </div>
+                <button class="btn btn-price" id="randomPriceBtn">
+                    <i class="fas fa-coins"></i> 开始随机价格
+                </button>
+                <div class="price-display" id="priceDisplay">
+                    100-300
+                </div>
+            </div>
+            
+            <div class="images-section">
+                <div class="images-controls">
+                    <div class="card-title">
+                        <i class="fas fa-images"></i> 小卡展示
+                    </div>
+                    <button class="btn-image" id="randomImageBtn">
+                        <i class="fas fa-images"></i> 抽取小卡
+                    </button>
                 </div>
                 <div class="images-display" id="imagesContainer">
                     <!-- 图片将在这里显示 -->
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">
-                    <i class="fas fa-tag"></i> 随机价格生成
-                </div>
-                <div class="price-display" id="priceDisplay">
-                    100-300
+                    <div class="image-item">
+                        <img src="https://placehold.co/300x200/1a2a6c/white?text=图片+1" alt="图片1">
+                    </div>
+                    <div class="image-item">
+                        <img src="https://placehold.co/300x200/b21f1f/white?text=图片+2" alt="图片2">
+                    </div>
+                    <div class="image-item">
+                        <img src="https://placehold.co/300x200/fdbb2d/black?text=图片+3" alt="图片3">
+                    </div>
+                    <div class="image-item">
+                        <img src="https://placehold.co/300x200/8e44ad/white?text=图片+4" alt="图片4">
+                    </div>
+                    <div class="image-item">
+                        <img src="https://placehold.co/300x200/3498db/white?text=图片+5" alt="图片5">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+    
     <footer>
-        <p>随机内容生成器 | 设计于 2023</p>
+        <p>ES大富翁随机生成器</p>
     </footer>
 
     <script>
-        // 28条示例文字
-        const textArray = [
-            "生活就像一盒巧克力，你永远不知道下一颗是什么味道。",
-            "成功的秘诀在于对目标的执着追求。",
-            "时间是最好的老师，但不幸的是，它杀死了所有的学生。",
-            "只有疯狂到认为自己可以改变世界的人，才能真正改变世界。",
-            "不要等待机会，而要创造机会。",
-            "你的时间有限，不要浪费在活在别人的生活里。",
-            "梦想不会逃跑，会逃跑的永远是自己。",
-            "知识就是力量。",
-            "行动是治愈恐惧的良药。",
-            "最大的风险是不冒任何风险。",
-            "想象力比知识更重要。",
-            "坚持就是胜利。",
-            "昨天是历史，明天是谜团，今天是礼物。",
-            "简单是复杂的最终形式。",
-            "人生没有彩排，每天都是现场直播。",
-            "走自己的路，让别人去说吧。",
-            "失败是成功之母。",
-            "爱是理解的别名。",
-            "活着就是为了改变世界，难道还有其他原因吗？",
-            "无论你认为自己行还是不行，你都是对的。",
-            "生命中最难的阶段不是没有人懂你，而是你不懂你自己。",
-            "理想是指路明灯。没有理想，就没有坚定的方向。",
-            "真正的发现之旅不在于寻找新的风景，而在于有新的眼睛。",
-            "幸福不是得到你想要的，而是享受你所拥有的。",
-            "世界上最宽阔的是海洋，比海洋更宽阔的是天空，比天空更宽阔的是人的胸怀。",
-            "如果机会不敲门，那就建造一扇门。",
-            "预测未来的最好方法就是创造它。",
-            "不要因为结束而哭泣，微笑吧，为你的曾经拥有。"
+        // 命运卡库（A区域）- 14条文字
+        const destinyCards = [
+            "太好啦是情趣酒店我们有救啦：同事情人节约你去情趣酒店，本来以为要不知天地为何物了，结果同事拉着你练了一晚上歌。如果有adam [七种茨/乱凪砂] 小卡【歌唱+100】，没有白花酒店钱则【金钱-100】",
+            "es没有过5减3：准确说出大楼三个小偶像身高。全部正确则【粉丝数+100】，但凡一个出错【粉丝数-300】",
+            "选秀节目：我重生了，这一回我要夺回属于我的C位！如果购买了在选秀节目中排名前11的任意偶像小卡则【粉丝+200】。没有购买任意一张的话，来选秀还失去了金钱【金钱-100】",
+            "吊诡的生财之道：偷了很多同事的白袜子放到网上卖，大赚一笔。如果有乙狩阿多尼斯小卡【金钱+200】。没有则——意图偷窃被逮捕【粉丝-100、金钱-200】",
+            "打工皇帝：穿上舞台装我是偶像，但是换上私服其实我是酒店领班。如果购买了伏见弓弦小卡则【金钱+100】，没有则因为审美太差，被经纪人要求不许再穿，白花了【金钱-100】",
+            "周刊文春：虽然不知道你具体做错了什么，但是你就是做错了一些事情，下次做坏事记得说自己是陈女士好吗？好的。【粉丝-200】",
+            "蓝屏危机：倒霉的你想剪个视频涨粉，结果半成品还没保存就眼前一蓝……（取材自真实案例）。没能及时更新预约过期了【粉丝-100】。如果有电脑高手游木真的小卡救你【粉丝+100】",
+            "广告but蛋白粉：被安排去拍摄了蛋白粉健身广告，成片出来之后粉丝尖叫“能不能不要再举铁了！”【粉丝-100】。如果购买了姬宫桃李的小卡，因为愚人节复刻【粉丝+100】",
+            "舞斗会？武斗会？！ ：拍摄了一个莫名其妙的MV，老师们你们觉得这个MV能火吗？拥有燃拳组任意一人小卡【粉丝+100】，否则【粉丝-100】",
+            "神迹魔法：cover舞蹈的时候不怕死地选择了极难，跳完之后觉得自己目前的出路是该去海底捞甩面【粉丝-100】。如果有园前辈、开关前辈的小卡，会得到指导【粉丝＋100】",
+            "我想把这玩意儿染成绿的：公司疯魔般给你们设计了新的舞台服装，你看了之后两眼一绿......【粉丝-100】",
+            "铁蛋~：让你录个公司祝福音频结果泉损音质了【粉丝-100】。有濑名泉小卡的话，大家都会笑着打开剪辑软件【粉丝+100】",
+            "这不凹？：同事说这把跟他凹了保证血赚，借他点钱？有天城燐音小卡帮忙的话【金钱+200】，没有则【金钱-100】",
+            "哪里赚钱哪里花：路过卡池没忍住抽了一发十连……有白鸟蓝良小卡肯定彩光【金钱+100】，不然就坠机了【金钱-100】"
         ];
         
-        // 20张示例图片URL（使用Picsum提供的随机图片）
-        const imageArray = [];
-        for (let i = 1; i <= 20; i++) {
-            imageArray.push(`https://picsum.photos/300/200?random=${i}`);
-        }
+        // 机会卡库（B区域）- 14条文字
+        const opportunityCards = [
+            "赛博金色行星频道：上了一个好像是208线的脱口秀频道，被放进机会里来大概是带资进组了？【粉丝＋300】",
+            "大学：你该不会是村里难得的大学生吧？！粉丝真的很欣赏这样的高素质人才！如果拥有仁兔成鸣/斋宫宗/HiMERU任意一人小卡【粉丝+100】",
+            "hekk：偶像生活不易，去了一家游戏公司兼职。虽然不太爱干活，但是同事也这样（划掉）。但是在公司偷水偷电了【金钱+200】",
+            "神图有了：抱着必出神图的决心在演唱会上一秒钟60个POSE，狼子野心路人皆知，但好在神图真的有了【粉丝＋200】",
+            "拨开迷雾看未来：同事声称他有家学渊源要给你算命，你信了。他说你今日财运极佳，你去买了彩票，让我们一起说谢谢逆先夏目【金钱+100】。如果有逆先夏目小卡【金钱＋300】",
+            "本大富翁游戏有自己的皇族：因为后台有人充钱了，所以10秒钟之内说出奶次的五个优点就让你【金钱+100】，说不出来你也只会听到一声“嘶…”",
+            "这张脸是神的杰作：遇到这个男人我们会自动输出四个字：（    ）。如果有冰鹰北斗的小卡【粉丝＋100】，没有则什么也不会发生",
+            "这才是真正的艺术：完美的祝花设计让路过的蚂蚁也会感叹这才是真正的艺术......如果拥有瓦任意一人小卡【粉丝+100】",
+            "我是来加入这个家的：我知道同事家底丰厚，但也不知道这么丰厚啊。我愿意加入这个家，哪怕是以宠物的形式。如果拥有菲任意一人小卡【金钱+200】，没有的话——真不做人了啊？（什么也不会发生）",
+            "莫名其妙就爱上姐了：你殷勤地问老板早上好喝咖啡吗，七种茨看了你一眼，说差不多得了，钱你拿去花吧【金钱+100】。如果有七种茨小卡则【金钱＋300】",
+            "让我们说谢谢巴黎：不愿留下名字的神秘斋姓男子看你为钱发愁，皱着眉头替你准备了完美的演出服【金钱+100，粉丝+100】",
+            "追忆暂停，我先卖橙汁：大家固然都有自己内心的伤痛，但是帅哥同事喊我和他一起卖橙汁耶。如果有羽风薰小卡【金钱+100】，没有则打卡一日游（什么也不会发生）",
+            "肉包子打狗：陪同事出村去城里找他离家出走的哥哥……同事你醒醒啊我们是来寻亲的！如果有天城一彩小卡【人气+100】，没有的话内推也有奖金嘛【金钱+100】",
+            "哭坟站：再铁石心肠的女人来到这里也会流眼泪......拥有追忆人物任意小卡【粉丝+100】"
+        ];
+        
+        // 31张图片URL（使用占位符，实际使用时可以替换）
+        const imageArray = [
+            "https://oss.tkrmw.com/temp_image/public/202508/1756374861.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375125.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375145.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375196.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375235.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375258.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375291.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375316.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375390.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375431.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375451.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375468.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375498.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375518.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375539.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375558.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375577.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375597.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375746.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375769.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375789.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375812.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375843.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375867.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375893.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375919.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375945.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756375986.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756376009.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756376027.png",
+            "https://oss.tkrmw.com/temp_image/public/202508/1756397023.png"
+        ];
         
         // 获取DOM元素
-        const randomTextBtn = document.getElementById('randomTextBtn');
+        const destinyCardBtn = document.getElementById('destinyCardBtn');
+        const opportunityCardBtn = document.getElementById('opportunityCardBtn');
         const randomImageBtn = document.getElementById('randomImageBtn');
         const randomPriceBtn = document.getElementById('randomPriceBtn');
-        const textDisplay = document.getElementById('textDisplay');
+        const cardDisplay = document.getElementById('cardDisplay');
         const imagesContainer = document.getElementById('imagesContainer');
         const priceDisplay = document.getElementById('priceDisplay');
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const closeBtn = document.querySelector('.close');
         
-        // 随机文字功能
-        randomTextBtn.addEventListener('click', () => {
-            const randomIndex = Math.floor(Math.random() * textArray.length);
-            textDisplay.classList.remove('fade-in');
+        // 随机命运卡功能
+        destinyCardBtn.addEventListener('click', () => {
+            const randomIndex = Math.floor(Math.random() * destinyCards.length);
+            cardDisplay.classList.remove('fade-in');
             
             // 触发重排以重新启动动画
-            void textDisplay.offsetWidth;
+            void cardDisplay.offsetWidth;
             
-            textDisplay.classList.add('fade-in');
-            textDisplay.textContent = textArray[randomIndex];
+            cardDisplay.classList.add('fade-in');
+            cardDisplay.textContent = destinyCards[randomIndex];
+        });
+        
+        // 随机机会卡功能
+        opportunityCardBtn.addEventListener('click', () => {
+            const randomIndex = Math.floor(Math.random() * opportunityCards.length);
+            cardDisplay.classList.remove('fade-in');
+            
+            // 触发重排以重新启动动画
+            void cardDisplay.offsetWidth;
+            
+            cardDisplay.classList.add('fade-in');
+            cardDisplay.textContent = opportunityCards[randomIndex];
         });
         
         // 随机图片功能
@@ -404,28 +531,28 @@
             
             // 创建并添加图片元素
             selectedIndices.forEach((index, i) => {
-                const imageCard = document.createElement('div');
-                imageCard.className = 'image-card fade-in';
-                imageCard.style.animationDelay = `${i * 0.2}s`;
+                const imageItem = document.createElement('div');
+                imageItem.className = 'image-item';
+                imageItem.style.animationDelay = `${i * 0.1}s`;
                 
                 const img = document.createElement('img');
                 img.src = imageArray[index];
-                img.alt = `随机图片 ${index + 1}`;
+                img.alt = `小卡 ${index + 1}`;
                 
-                const imageInfo = document.createElement('div');
-                imageInfo.className = 'image-info';
-                imageInfo.textContent = `图片 #${index + 1}`;
+                // 添加点击放大功能
+                img.addEventListener('click', () => {
+                    modal.style.display = 'flex';
+                    modalImg.src = imageArray[index];
+                });
                 
-                imageCard.appendChild(img);
-                imageCard.appendChild(imageInfo);
-                
-                imagesContainer.appendChild(imageCard);
+                imageItem.appendChild(img);
+                imagesContainer.appendChild(imageItem);
             });
         });
         
         // 随机价格功能
         randomPriceBtn.addEventListener('click', () => {
-            // 生成100-300之间的随机整数
+            // 生成100-300之间的随机整数（包含100和300）
             const randomPrice = Math.floor(Math.random() * 201) + 100;
             
             // 移除旧动画类
@@ -441,12 +568,39 @@
             priceDisplay.textContent = randomPrice;
         });
         
-        // 初始加载时显示一条随机文字
+        // 关闭模态框
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        
+        // 点击模态框外部关闭
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // 初始加载时显示占位图片
         window.addEventListener('load', () => {
-            const randomIndex = Math.floor(Math.random() * textArray.length);
-            textDisplay.textContent = textArray[randomIndex];
+            // 初始显示5张占位图片
+            for (let i = 0; i < 5; i++) {
+                const imageItem = document.createElement('div');
+                imageItem.className = 'image-item';
+                
+                const img = document.createElement('img');
+                img.src = `https://placehold.co/300x200/1a2a6c/white?text=图片+${i+1}`;
+                img.alt = `图片 ${i+1}`;
+                
+                // 添加点击放大功能
+                img.addEventListener('click', () => {
+                    modal.style.display = 'flex';
+                    modalImg.src = `https://placehold.co/600x400/1a2a6c/white?text=图片+${i+1}`;
+                });
+                
+                imageItem.appendChild(img);
+                imagesContainer.appendChild(imageItem);
+            }
         });
     </script>
 </body>
-
 </html>
